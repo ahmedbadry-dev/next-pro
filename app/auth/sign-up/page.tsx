@@ -13,8 +13,7 @@ const SignUpPage = () => {
     const { handleSubmit, control, reset, formState } = useForm<TRegister>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            firstName: '',
-            lastName: '',
+            userName: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -37,18 +36,11 @@ const SignUpPage = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FieldGroup className="gap-y-4">
                             <InputField
-                                id="form-firstName"
-                                name="firstName"
+                                id="form-userName"
+                                name="userName"
                                 control={control}
-                                label="First Name"
-                                placeholder="Evil"
-                            />
-                            <InputField
-                                id="form-lastName"
-                                name="lastName"
-                                control={control}
-                                label="Last Name"
-                                placeholder="Rabbit"
+                                label="User Name"
+                                placeholder="Ahmed Badry"
                             />
                             <InputField
                                 id="form-email"
@@ -70,7 +62,7 @@ const SignUpPage = () => {
                                 id="form-confirmPassword"
                                 name="confirmPassword"
                                 control={control}
-                                label="Password"
+                                label="Confirm Password"
                                 placeholder="********"
                                 type="password"
                             />
