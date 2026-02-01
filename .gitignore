@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Convex
+.convex
+convex/_generated/
+convex/betterAuth/_generated/

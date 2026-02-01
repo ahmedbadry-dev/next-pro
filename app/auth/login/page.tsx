@@ -8,11 +8,18 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { InputField } from "@/components/web/input"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+import { Loader2 } from "lucide-react"
 
 
 const LoginPage = () => {
+    const [isPending, startTransition] = useTransition()
+    const router = useRouter()
 
-    const { handleSubmit, control, formState, reset } = useForm<TLogin>({
+
+    const { handleSubmit, control } = useForm<TLogin>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
             email: '',
@@ -21,14 +28,24 @@ const LoginPage = () => {
         mode: 'onBlur'
     })
 
-    const onSubmit: SubmitHandler<TLogin> = async (formData) => {
-        const { data, error } = await authClient.signIn.email({
-            email: formData.email,
-            password: formData.password,
-            callbackURL: "/",
+    const onSubmit: SubmitHandler<TLogin> = (formData) => {
+        startTransition(async () => {
+            await authClient.signIn.email(
+                {
+                    email: formData.email,
+                    password: formData.password,
+                },
+                {
+                    onSuccess: (res) => {
+                        toast.success(`Welcome, ${res?.data?.user?.name}`)
+                        router.push("/")
+                    },
+                    onError: (res) => {
+                        toast.error(res.error.message)
+                    },
+                }
+            )
         })
-        console.log(data);
-        console.log(error);
     }
 
     return (
@@ -59,9 +76,20 @@ const LoginPage = () => {
                         <Field orientation={"responsive"}>
                             <Button
                                 type="submit"
-                                disabled={!formState.isValid}
+                                disabled={isPending}
                                 className="cursor-pointer"
-                            >Login</Button>
+                            >
+                                {
+                                    isPending ? (
+                                        <>
+                                            <Loader2 className="size-4 animate-spin" />
+                                            <span>Loading...</span>
+                                        </>
+                                    ) : (
+                                        <span>Login</span>
+                                    )
+                                }
+                            </Button>
                         </Field>
                     </FieldGroup>
                 </form>

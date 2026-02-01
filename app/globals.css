@@ -79,6 +79,22 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Sonner (Light) */
+  --toast-success-bg: 142.1 76.2% 36.3%;
+  --toast-success-text: 0 0% 100%;
+  --toast-success-border: 142.1 72% 29.3%;
+
+  --toast-error-bg: 0 84.2% 60.2%;
+  --toast-error-text: 0 0% 100%;
+  --toast-error-border: 0 72.2% 50.6%;
+
+  --toast-warning-bg: 48 96% 53%;
+  --toast-warning-text: 20 14.3% 4.1%;
+  --toast-warning-border: 45 93% 47%;
+
+  --toast-info-bg: 217.2 91.2% 59.8%;
+  --toast-info-text: 0 0% 100%;
+  --toast-info-border: 221.2 83.2% 53.3%;
 }
 
 .dark {
@@ -113,12 +129,29 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* Sonner (Dark) */
+  --toast-success-bg: 142.1 70.6% 45.3%;
+  --toast-success-text: 0 0% 100%;
+  --toast-success-border: 142.1 64.2% 35.3%;
+
+  --toast-error-bg: 0 72.2% 50.6%;
+  --toast-error-text: 0 0% 100%;
+  --toast-error-border: 0 62.8% 40.6%;
+
+  --toast-warning-bg: 48 96% 53%;
+  --toast-warning-text: 0 0% 10%;
+  --toast-warning-border: 45 93% 47%;
+
+  --toast-info-bg: 217.2 91.2% 59.8%;
+  --toast-info-text: 0 0% 100%;
+  --toast-info-border: 221.2 83.2% 53.3%;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

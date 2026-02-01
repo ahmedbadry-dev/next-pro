@@ -4,6 +4,7 @@ import { Button, buttonVariants } from "../ui/button"
 import { ModeToggle } from "../ui/theme-toggle-icon"
 import { useConvexAuth } from "convex/react"
 import { authClient } from "@/lib/auth-client"
+import { toast } from "sonner"
 
 export const Navbar = () => {
     const { isAuthenticated, isLoading } = useConvexAuth()
@@ -30,8 +31,17 @@ export const Navbar = () => {
                         : isAuthenticated ?
                             (
                                 <Button
-                                    onClick={() => authClient.signOut()}
-                                    className={buttonVariants({ variant: "secondary" })}
+                                    onClick={() => authClient.signOut({
+                                        fetchOptions: {
+                                            onSuccess: () => {
+                                                toast.success("Logged out successfully")
+                                            },
+                                            onError: (res) => {
+                                                toast.error(res.error.message)
+                                            }
+                                        }
+                                    })}
+                                    className={buttonVariants({ variant: "default" })}
                                 >Logout</Button>
                             ) : (
                                 <>
