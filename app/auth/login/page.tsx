@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldGroup } from "@/components/ui/field"
 import { InputField } from "@/components/web/input"
 import { Button } from "@/components/ui/button"
+import { authClient } from "@/lib/auth-client"
 
 
 const LoginPage = () => {
+
     const { handleSubmit, control, formState, reset } = useForm<TLogin>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -19,10 +21,14 @@ const LoginPage = () => {
         mode: 'onBlur'
     })
 
-    const onSubmit: SubmitHandler<TLogin> = (data) => {
+    const onSubmit: SubmitHandler<TLogin> = async (formData) => {
+        const { data, error } = await authClient.signIn.email({
+            email: formData.email,
+            password: formData.password,
+            callbackURL: "/",
+        })
         console.log(data);
-
-        reset()
+        console.log(error);
     }
 
     return (
