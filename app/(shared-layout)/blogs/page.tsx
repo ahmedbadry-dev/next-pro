@@ -1,19 +1,20 @@
-'use client'
 
-import { api } from "@/convex/_generated/api"
-import { useQuery } from "convex/react"
+import { BlogsList } from "@/components/web/BlogsList"
+import { BlogsSkeleton } from "@/components/web/skeleton"
+
+import { Suspense } from "react"
 
 const BlogsPage = () => {
-    const blogs = useQuery(api.functions.blogs.getBlogs)
+
     return (
-        <div>
-            <h1>blogs</h1>
-            {blogs && blogs.map((blog) => (
-                <div key={blog._id}>
-                    <h1>{blog.title}</h1>
-                    <p>{blog.content}</p>
-                </div>
-            ))}
+        <div className="py-12">
+            <div className="text-center pb-12">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Our Blogs</h1>
+                <p className="pt-4 max-w-2xl mx-auto text-xl text-muted-foreground">Insights, thoughts, and trends from our team.</p>
+            </div>
+            <Suspense fallback={<BlogsSkeleton />}>
+                <BlogsList />
+            </Suspense>
         </div>
     )
 }
