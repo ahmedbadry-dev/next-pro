@@ -19,7 +19,7 @@ export const Navbar = () => {
 
                 <div className="flex items-center gap-2">
                     <Link className={buttonVariants({ variant: "ghost" })} href={'/'}>Home</Link>
-                    <Link className={buttonVariants({ variant: "ghost" })} href={'/blog'}>Blog</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/blogs'}>Blogs</Link>
                     <Link className={buttonVariants({ variant: "ghost" })} href={'/create'}>Create</Link>
                 </div>
             </div>
