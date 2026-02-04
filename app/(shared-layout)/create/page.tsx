@@ -1,8 +1,6 @@
 'use client'
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTransition } from "react"
 import { Button } from "@/components/ui/button"
@@ -16,6 +14,7 @@ import { toast } from "sonner"
 import { createBlogAction } from "@/app/actions"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 import { useRouter } from "next/navigation"
+import { Input } from "@/components/ui/input"
 
 const CreatePage = () => {
     const route = useRouter()
@@ -24,7 +23,8 @@ const CreatePage = () => {
         resolver: zodResolver(blogSchema),
         defaultValues: {
             title: '',
-            content: ''
+            content: '',
+            image: undefined
         },
         mode: 'onBlur'
     })
@@ -69,6 +69,7 @@ const CreatePage = () => {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FieldGroup className="gap-y-4">
+                            {/*title input field*/}
                             <InputField
                                 id="form-title"
                                 label="Title"
@@ -76,7 +77,7 @@ const CreatePage = () => {
                                 control={control}
                                 placeholder="title"
                             />
-
+                            {/*content input field*/}
                             <Controller
                                 name='content'
                                 control={control}
@@ -93,7 +94,28 @@ const CreatePage = () => {
                                     </Field>
                                 )}
                             />
-
+                            {/*image input field*/}
+                            <Controller
+                                name='image'
+                                control={control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel htmlFor='form-image'>Image</FieldLabel>
+                                        <Input
+                                            type="file"
+                                            id="form-image"
+                                            aria-invalid={fieldState.invalid}
+                                            accept="image/*"
+                                            onChange={(event) => {
+                                                const file = event.target.files?.[0]
+                                                field.onChange(file)
+                                            }}
+                                        />
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
+                            {/*submit btn*/}
                             <Field>
                                 <Button
                                     type="submit"
