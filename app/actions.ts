@@ -5,6 +5,7 @@ import { api } from '@/convex/_generated/api'
 import { redirect } from 'next/navigation'
 import { authComponent } from '@/convex/auth'
 import { fetchAuthMutation, getToken } from '@/lib/auth-server'
+import { revalidatePath } from 'next/cache'
 
 export async function createBlogAction(formDate: TBlogSchema) {
   try {
@@ -59,6 +60,8 @@ export async function createBlogAction(formDate: TBlogSchema) {
       error: 'Failed to create poste',
     }
   }
+
+  revalidatePath('/blogs')
 
   // => we can use this it get the token directly
   // await fetchAuthMutation(api.functions.blogs.createBlog, {
