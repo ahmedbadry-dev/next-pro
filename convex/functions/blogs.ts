@@ -64,3 +64,27 @@ export const generateUploadUrl = mutation({
     return ctx.storage.generateUploadUrl()
   },
 })
+
+// get blog by id
+export const getBlogById = query({
+  args: { id: v.id('blogs') },
+  handler: async (ctx, args) => {
+    const blog = await ctx.db.get(args.id)
+
+    // we can handle null her or we can handle it in thr front end
+    if (!blog) {
+      return null
+    }
+
+    // get image url
+    const resolveImageUrl =
+      blog?.imageStorageId !== undefined
+        ? await ctx.storage.getUrl(blog.imageStorageId)
+        : null
+
+    return {
+      ...blog,
+      imageUrl: resolveImageUrl,
+    }
+  },
+})

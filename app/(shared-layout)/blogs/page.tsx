@@ -1,9 +1,12 @@
 
 import { BlogsList } from "@/components/web/BlogsList"
 import { BlogsSkeleton } from "@/components/web/skeleton"
-
 import { Suspense } from "react"
 
+
+export const dynamic = 'force-static'
+// export const revalidate = 30
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'
 const BlogsPage = () => {
 
     return (

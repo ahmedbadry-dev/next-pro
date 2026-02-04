@@ -46,7 +46,7 @@ const CreatePage = () => {
                 // toasted
                 toast.success('Blog created successfully')
                 // clear form inputs
-                route.push('/')
+                route.push('/blogs')
                 reset()
             } catch (error) {
                 toast.error(getErrorMessage(error))
