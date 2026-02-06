@@ -1,8 +1,13 @@
-
+import type { Metadata } from 'next'
 import { BlogsList } from "@/components/web/BlogsList"
-import { BlogsSkeleton } from "@/components/web/skeleton"
+import { BlogsSkeleton } from "@/components/web/BlogSkeleton"
 import { Suspense } from "react"
 
+
+export const metadata: Metadata = {
+    title: 'Blogs | Nextjs 16 ',
+    description: 'our latest blog in tech'
+}
 
 export const dynamic = 'force-static'
 // export const revalidate = 30

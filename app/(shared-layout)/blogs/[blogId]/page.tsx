@@ -1,19 +1,58 @@
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { CommentSection } from "@/components/web/CommentSection"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
-import { fetchQuery } from "convex/nextjs"
+import { fetchQuery, preloadQuery } from "convex/nextjs"
 import { ArrowLeft } from "lucide-react"
+import { Metadata, ResolvingMetadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+
+
 
 type BlogProps = {
     params: Promise<{ blogId: Id<"blogs"> }>
 }
 
-const Blog = async ({ params }: BlogProps) => {
+export async function generateMetadata({ params }: BlogProps, parent: ResolvingMetadata): Promise<Metadata> {
     const { blogId } = await params
     const blog = await fetchQuery(api.functions.blogs.getBlogById, { id: blogId })
+
+    if (!blog) {
+        return {
+            title: 'blog not found'
+        }
+    }
+    // optionally access and extend (rather than replace) parent metadata
+    const previousImages = (await parent).openGraph?.images || []
+
+    return {
+        title: blog?.title,
+        description: blog?.content.slice(0, 160),
+        openGraph: {
+            images: [
+                {
+                    url: blog?.imageUrl ?? "https://cdn.dribbble.com/userupload/21207141/file/original-af25d78fac8dc71b312d8b0bef78c93b.jpg",
+                    width: 1200,
+                    height: 650,
+                    alt: blog?.title
+                },
+                ...previousImages
+            ]
+        }
+    }
+}
+
+const Blog = async ({ params }: BlogProps) => {
+    const { blogId } = await params
+
+    const [blog, preLoadedComments] = await Promise.all([
+        fetchQuery(api.functions.blogs.getBlogById, { id: blogId }),
+        preloadQuery(api.functions.comments.getCommentsByBlogId, {
+            blogId
+        })
+    ])
 
     if (!blog) {
         return (
@@ -35,6 +74,7 @@ const Blog = async ({ params }: BlogProps) => {
                     src={blog.imageUrl ?? "https://cdn.dribbble.com/userupload/21207141/file/original-af25d78fac8dc71b312d8b0bef78c93b.jpg"}
                     alt={blog.title ?? 'no image'}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover hover:scale-105 transition-transform decoration-500"
                 />
             </div>
@@ -52,7 +92,8 @@ const Blog = async ({ params }: BlogProps) => {
                     {blog.content}
                 </p>
                 <Separator className="my-8" />
-
+                {/* comments section */}
+                <CommentSection preLoadedComments={preLoadedComments} />
             </div>
         </div>
     )

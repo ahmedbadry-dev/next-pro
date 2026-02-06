@@ -9,12 +9,13 @@ import { blogSchema, type TBlogSchema } from "@/validations/blogSchema/blogSchem
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Textarea } from "@/components/ui/textarea"
-import { InputField } from "@/components/web/input"
+import { InputField } from "@/components/web/InputField"
 import { toast } from "sonner"
 import { createBlogAction } from "@/app/actions"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
+import { TextareaField } from "@/components/web/TextareaField"
 
 const CreatePage = () => {
     const route = useRouter()
@@ -78,21 +79,12 @@ const CreatePage = () => {
                                 placeholder="title"
                             />
                             {/*content input field*/}
-                            <Controller
-                                name='content'
+                            <TextareaField
+                                id='form-content'
+                                label="Content"
+                                name="content"
                                 control={control}
-                                render={({ field, fieldState }) => (
-                                    <Field>
-                                        <FieldLabel htmlFor='form-content'>Content</FieldLabel>
-                                        <Textarea
-                                            {...field}
-                                            placeholder='Super cool blog content..'
-                                            aria-invalid={fieldState.invalid}
-                                            id='form-content'
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
+                                placeholder='Super cool blog content..'
                             />
                             {/*image input field*/}
                             <Controller
