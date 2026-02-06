@@ -1,8 +1,11 @@
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { BlogPresence } from "@/components/web/BlogPresence"
 import { CommentSection } from "@/components/web/CommentSection"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
+import { authComponent } from "@/convex/auth"
+import { getToken } from "@/lib/auth-server"
 import { fetchQuery, preloadQuery } from "convex/nextjs"
 import { ArrowLeft } from "lucide-react"
 import { Metadata, ResolvingMetadata } from "next"
@@ -47,11 +50,14 @@ export async function generateMetadata({ params }: BlogProps, parent: ResolvingM
 const Blog = async ({ params }: BlogProps) => {
     const { blogId } = await params
 
-    const [blog, preLoadedComments] = await Promise.all([
+    const token = await getToken()
+
+    const [blog, preLoadedComments, userId] = await Promise.all([
         fetchQuery(api.functions.blogs.getBlogById, { id: blogId }),
         preloadQuery(api.functions.comments.getCommentsByBlogId, {
             blogId
-        })
+        }),
+        fetchQuery(api.presence.getUserId, {}, { token })
     ])
 
     if (!blog) {
@@ -79,9 +85,12 @@ const Blog = async ({ params }: BlogProps) => {
                 />
             </div>
 
-            <p className="text-sm text-muted-foreground flex justify-end mb-8">
-                Posted on: {new Date(blog._creationTime).toLocaleDateString('en-US')}
-            </p>
+            <div className="flex justify-between mb-10 px-2 h-10">
+                {userId && <BlogPresence roomId={blog._id} userId={userId} />}
+                <p className="text-sm text-muted-foreground  ">
+                    Posted on: {new Date(blog._creationTime).toLocaleDateString('en-US')}
+                </p>
+            </div>
 
             <div className="space-y-4 flex flex-col">
                 <h1 className="text-4xl h-12 leading-9 pl-3 tracking-tight text-foreground border-l-4 border-primary rounded-md ">
