@@ -11,6 +11,7 @@ import { ArrowLeft } from "lucide-react"
 import { Metadata, ResolvingMetadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
 
 
@@ -59,6 +60,10 @@ const Blog = async ({ params }: BlogProps) => {
         }),
         fetchQuery(api.presence.getUserId, {}, { token })
     ])
+
+    if (!userId) {
+        return redirect('/auth/login')
+    }
 
     if (!blog) {
         return (
