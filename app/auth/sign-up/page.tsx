@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldGroup, } from "@/components/ui/field"
 import { Button } from "@/components/ui/button"
 
-import { InputField } from "@/components/web/input"
+import { InputField } from "@/components/web/InputField"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"

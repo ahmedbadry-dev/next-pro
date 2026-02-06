@@ -1,12 +1,17 @@
 'use server'
-import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { fetchMutation, fetchQuery, preloadQuery } from 'convex/nextjs'
 import { blogSchema, TBlogSchema } from '@/validations/blogSchema/blogSchema'
 import { api } from '@/convex/_generated/api'
-import { redirect } from 'next/navigation'
-import { authComponent } from '@/convex/auth'
-import { fetchAuthMutation, getToken } from '@/lib/auth-server'
+import { getToken } from '@/lib/auth-server'
 import { revalidatePath } from 'next/cache'
+import {
+  commentSchema,
+  TCommentSchema,
+} from '@/validations/commentSchema/commentSchema'
+import { authComponent } from '@/convex/auth'
+import { Id } from '@/convex/_generated/dataModel'
 
+// create blog
 export async function createBlogAction(formDate: TBlogSchema) {
   try {
     // we need to get JWT token to send it to convex server
@@ -72,6 +77,34 @@ export async function createBlogAction(formDate: TBlogSchema) {
   // redirect('/')
 }
 
+// get all blogs
 export async function getAllBlogs() {
   await fetchQuery(api.functions.blogs.getBlogs)
 }
+
+// create comment
+export async function createCommentAction(formDate: TCommentSchema) {
+  try {
+    // we need to get JWT token to send it to convex server
+    const token = await getToken()
+
+    const parsed = commentSchema.safeParse(formDate)
+    if (!parsed.success) {
+      throw new Error('something went wrong!')
+    }
+    await fetchMutation(
+      api.functions.comments.createComment,
+      {
+        blogId: parsed.data?.blogId,
+        body: parsed.data?.body,
+      },
+      { token }
+    )
+  } catch (error) {
+    return {
+      error: 'Failed to create comment',
+    }
+  }
+}
+
+// get all comments for this blog

@@ -16,6 +16,7 @@ export const BlogsList = async () => {
                             src={blog.imageUrl ?? "https://cdn.dribbble.com/userupload/21207141/file/original-af25d78fac8dc71b312d8b0bef78c93b.jpg"}
                             alt={blog.title}
                             fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="rounded-t-lg object-cover"
                         />
                     </div>

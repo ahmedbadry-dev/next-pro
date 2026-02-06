@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/web/navbar"
+import { Navbar } from "@/components/web/Navbar"
 
 const SharedLayout = ({ children }: { children: React.ReactNode }) => {
     return (
