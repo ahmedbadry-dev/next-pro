@@ -77,6 +77,7 @@ const CreatePage = () => {
                                 name="title"
                                 control={control}
                                 placeholder="title"
+                                displayLength={true}
                             />
                             {/*content input field*/}
                             <TextareaField
@@ -102,6 +103,7 @@ const CreatePage = () => {
                                                 const file = event.target.files?.[0]
                                                 field.onChange(file)
                                             }}
+                                            className="text-muted-foreground "
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>

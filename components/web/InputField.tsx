@@ -6,6 +6,7 @@ import {
     FieldLabel,
     FieldError,
 } from '@/components/ui/field'
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../ui/input-group"
 
 type InputFiledProps<TFieldValues extends FieldValues> = {
     id: string,
@@ -14,6 +15,7 @@ type InputFiledProps<TFieldValues extends FieldValues> = {
     label: string,
     placeholder: string,
     type?: string
+    displayLength?: boolean
 }
 
 export const InputField = <TFieldValues extends FieldValues>({
@@ -23,6 +25,7 @@ export const InputField = <TFieldValues extends FieldValues>({
     label,
     placeholder,
     type = "text",
+    displayLength = false
 }: InputFiledProps<TFieldValues>) => {
     return (
         <Controller
@@ -32,13 +35,21 @@ export const InputField = <TFieldValues extends FieldValues>({
                 <Field>
                     {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 
-                    <Input
-                        {...field}
-                        type={type}
-                        placeholder={placeholder}
-                        aria-invalid={fieldState.invalid}
-                        id={id}
-                    />
+                    <InputGroup>
+                        <InputGroupInput
+                            {...field}
+                            type={type}
+                            placeholder={placeholder}
+                            aria-invalid={fieldState.invalid}
+                            id={id}
+                        />
+                        {
+                            displayLength &&
+                            <InputGroupAddon align={'inline-end'}>
+                                <InputGroupText>{field.value.length}/50</InputGroupText>
+                            </InputGroupAddon>
+                        }
+                    </InputGroup>
 
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>

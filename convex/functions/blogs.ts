@@ -1,6 +1,7 @@
 import { mutation, query } from '../_generated/server'
 import { v } from 'convex/values'
 import { authComponent } from '../auth'
+import { Doc } from '../_generated/dataModel'
 
 // add blog to db
 export const createBlog = mutation({
@@ -86,5 +87,62 @@ export const getBlogById = query({
       ...blog,
       imageUrl: resolveImageUrl,
     }
+  },
+})
+
+interface ISearchResults {
+  _id: string
+  title: string
+  content: string
+}
+
+export const searchBlogs = query({
+  args: {
+    term: v.string(),
+    limit: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit
+
+    const results: Array<ISearchResults> = []
+
+    // this set for tracking blogs id to prevent duplication cose we can get the same blog from search by title and by body
+    const seen = new Set()
+
+    // this is a helper function we used to help us to adding the unique blogs to pur results array
+    const pushDocs = async (docs: Array<Doc<'blogs'>>) => {
+      for (const doc of docs) {
+        if (seen.has(doc._id)) continue
+
+        seen.add(doc._id)
+        results.push({
+          _id: doc._id,
+          title: doc.title,
+          content: doc.content,
+        })
+
+        if (results.length >= limit) break
+      }
+    }
+
+    const titleMatches = await ctx.db
+      .query('blogs')
+      .withSearchIndex('search_title', (q) => q.search('title', args.term))
+      .take(limit)
+
+    await pushDocs(titleMatches)
+
+    if (results.length < limit) {
+      const contentMatches = await ctx.db
+        .query('blogs')
+        .withSearchIndex('search_content', (q) =>
+          q.search('content', args.term)
+        )
+        .take(limit)
+
+      await pushDocs(contentMatches)
+    }
+
+    return results
   },
 })
