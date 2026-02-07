@@ -3,7 +3,7 @@ import { fetchMutation, fetchQuery, preloadQuery } from 'convex/nextjs'
 import { blogSchema, TBlogSchema } from '@/validations/blogSchema/blogSchema'
 import { api } from '@/convex/_generated/api'
 import { getToken } from '@/lib/auth-server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag, updateTag } from 'next/cache'
 import {
   commentSchema,
   TCommentSchema,
@@ -66,7 +66,8 @@ export async function createBlogAction(formDate: TBlogSchema) {
     }
   }
 
-  revalidatePath('/blogs')
+  revalidateTag('blogsList', 'max')
+  // revalidatePath('/blogs')
 
   // => we can use this it get the token directly
   // await fetchAuthMutation(api.functions.blogs.createBlog, {

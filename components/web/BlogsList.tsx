@@ -4,8 +4,12 @@ import { fetchQuery } from "convex/nextjs"
 import Image from "next/image"
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "../ui/card"
 import { buttonVariants } from "../ui/button"
+import { cacheLife, cacheTag } from "next/cache"
 
 export const BlogsList = async () => {
+    'use cache'
+    cacheTag('blogsList')
+    cacheLife('hours')
     const blogs = await fetchQuery(api.functions.blogs.getBlogs)
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

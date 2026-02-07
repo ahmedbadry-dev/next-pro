@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'our latest blog in tech'
 }
 
-export const dynamic = 'force-static'
+// export const dynamic = 'force-static'
 // export const revalidate = 30
 // 'auto' | 'force-dynamic' | 'error' | 'force-static'
 const BlogsPage = () => {
