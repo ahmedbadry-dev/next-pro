@@ -1,18 +1,24 @@
+'use client'
+
 import { Loader2, Search } from "lucide-react"
 import { Input } from "../ui/input"
-import { useDebugValue, useState } from "react"
+import { useState } from "react"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
+import useDebounce from "@/hooks/useDebounce"
 
 export const SearchInput = () => {
+
     const [term, setTerm] = useState('')
+    const debouncedTerm = useDebounce(term, 300)
+
     const [open, setOpen] = useState(false)
 
     const results = useQuery(
         api.functions.blogs.searchBlogs,
-        term.length >= 2 ? {
-            term: term, limit: 5
+        debouncedTerm.length >= 2 ? {
+            term: debouncedTerm, limit: 5
         } : 'skip')
 
     const handleSearchChanges = (e: React.ChangeEvent<HTMLInputElement>) => {

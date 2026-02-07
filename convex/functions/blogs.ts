@@ -103,6 +103,7 @@ export const searchBlogs = query({
   },
   handler: async (ctx, args) => {
     const limit = args.limit
+    console.log('firing')
 
     const results: Array<ISearchResults> = []
 
